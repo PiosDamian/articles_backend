@@ -40,7 +40,9 @@ INSTALLED_APPS = [
 
     'rest_framework',
     'drf_yasg',
-    'django_filters'
+    'django_filters',
+
+    'articles'
 ]
 
 MIDDLEWARE = [
@@ -54,7 +56,7 @@ MIDDLEWARE = [
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
 ]
 
-ROOT_URLCONF = 'articles.urls'
+ROOT_URLCONF = 'articles_app.urls'
 
 TEMPLATES = [
     {
@@ -72,7 +74,7 @@ TEMPLATES = [
     },
 ]
 
-WSGI_APPLICATION = 'articles.wsgi.application'
+WSGI_APPLICATION = 'articles_app.wsgi.application'
 
 
 # Database
@@ -126,7 +128,7 @@ STATIC_URL = '/static/'
 
 REST_FRAMEWORK = {
     'DEFAULT_FILTER_BACKENDS': (
-        'django_filters.rest_framework.DjangoFilterBackend'
+        'django_filters.rest_framework.DjangoFilterBackend',
     )
 }
 
