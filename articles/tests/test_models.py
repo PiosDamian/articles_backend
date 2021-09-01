@@ -3,9 +3,10 @@ import pytest
 from articles.tests.factories import UserFactory, ArticleFactory
 
 
+@pytest.mark.django_db
 def test_article_str():
     article = ArticleFactory(title='test')
-    assert str(article) == 'test - None'
+    assert str(article).startswith('test - ')
 
 
 @pytest.mark.django_db

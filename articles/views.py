@@ -7,6 +7,7 @@ from articles.serializers import ArticleSerializer, UserSerializer, KeywordsSeri
 class ArticlesViewSet(ModelViewSet):
     queryset = Article.objects.all()
     serializer_class = ArticleSerializer
+    filterset_fields = ('keywords',)
 
 
 class UserViewSet(ModelViewSet):
