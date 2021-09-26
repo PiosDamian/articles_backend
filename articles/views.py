@@ -1,20 +1,15 @@
 from rest_framework.viewsets import ModelViewSet
 
-from articles.models import Article, Keyword, User
-from articles.serializers import ArticleSerializer, UserSerializer, KeywordsSerializer
+from articles.models import Article, Keyword
+from articles.serializers import ArticleSerializer, KeywordsSerializer
 
 
 class ArticlesViewSet(ModelViewSet):
-    queryset = Article.objects.all()
-    serializer_class = ArticleSerializer
-    filterset_fields = ('keywords',)
-
-
-class UserViewSet(ModelViewSet):
-    queryset = User.objects.all()
-    serializer_class = UserSerializer
+	queryset = Article.objects.all()
+	serializer_class = ArticleSerializer
+	filterset_fields = ('keywords',)
 
 
 class KeywordViewSet(ModelViewSet):
-    queryset = Keyword.objects.all()
-    serializer_class = KeywordsSerializer
+	queryset = Keyword.objects.all()
+	serializer_class = KeywordsSerializer

@@ -1,5 +1,6 @@
 from django.contrib.auth.base_user import AbstractBaseUser, BaseUserManager
 from django.db import models
+from rest_framework import serializers
 
 
 class UserManager(BaseUserManager):
@@ -26,3 +27,10 @@ class User(AbstractBaseUser):
 	REQUIRED_FIELDS = ['first_name', 'last_name']
 
 	objects = UserManager()
+
+
+# serializer na potrzeby tworzenia i pobierania artykułów
+class UserSerializer(serializers.ModelSerializer):
+	class Meta:
+		model = User
+		fields = ['email', 'last_name', 'first_name']

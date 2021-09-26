@@ -1,37 +1,38 @@
 from rest_framework import serializers
 
-from articles.models import Article, User, Keyword
-from django.contrib.auth.hashers import make_password
-
-
-class UserSerializer(serializers.ModelSerializer):
-    class Meta:
-        model = User
-        fields = ['login', 'firstname', 'lastname', 'password', 'articles', 'number_of_articles']
-
-    number_of_articles = serializers.SerializerMethodField()
-
-    password = serializers.CharField(
-        write_only=True,
-        required=True,
-        style={'input_type': 'password'}
-    )
-
-    def get_number_of_articles(self, instance):
-        return instance.get_number_of_articles()
-
-    def create(self, validated_data):
-        validated_data['password'] = make_password(validated_data['password'])
-        return super(UserSerializer, self).create(validated_data)
-
-
-class ArticleSerializer(serializers.ModelSerializer):
-    class Meta:
-        model = Article
-        fields = '__all__'
+from articles.models import Article, Keyword
+from users.models import UserSerializer
 
 
 class KeywordsSerializer(serializers.ModelSerializer):
-    class Meta:
-        model = Keyword
-        fields = '__all__'
+	class Meta:
+		model = Keyword
+		fields = '__all__'
+
+
+class ArticleSerializer(serializers.ModelSerializer):
+	keywords = KeywordsSerializer(read_only=False, many=True)
+	author = UserSerializer(required=False)
+
+	class Meta:
+		model = Article
+		fields = ('id', 'title', 'abstract', 'content', 'author', 'keywords')
+
+	def create(self, validated_data):
+		# tworzenie pustego artykułu w bazie
+		article = Article.objects.create()
+		try:
+			article.title = validated_data.get('title')
+			article.abstract = validated_data.get('abstract')
+			article.content = validated_data.get('content')
+			article.author = self.context['request'].user
+			article.keywords.set(map(lambda el: el['id'], self.context['request'].data['keywords']))
+			# artykuł już w bazie istnieje, należy zapisać zmiany
+			article.save()
+			return article
+		except Exception as e:
+			print(e)
+			# obiekt w bazie został utworzony, ale nie został zaktualizowany - metoda save
+			# jeżeli wystąpi wyjątek artykuł należy usunąć
+			article.delete()
+			return None
